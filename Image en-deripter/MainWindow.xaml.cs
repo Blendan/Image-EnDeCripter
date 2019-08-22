@@ -30,6 +30,9 @@ namespace Image_en_deripter
         public MainWindow()
         {
             InitializeComponent();
+            inputMessage.Document.Blocks.Clear();
+            inputMessage.Document.Blocks.Add(new Paragraph(new Run("")));
+            ShowLeft();
         }
 
         private void BtnSelectImgSource_Click(object sender, RoutedEventArgs e)
@@ -37,13 +40,17 @@ namespace Image_en_deripter
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image files (*.png)|*.png";
             if (openFileDialog.ShowDialog() == true)
+            {
                 imgUrl = openFileDialog.FileName;
 
-            lblSelectImgSource.Content = imgUrl;
+                lblSelectImgSource.Content = imgUrl;
 
-            bitImage.LoadImage(imgUrl);
+                bitImage.LoadImage(imgUrl);
 
-            lblMaxBits.Content = bitImage.GetUsabelBitCount();
+                lblMaxBits.Content = bitImage.GetUsabelBitCount();
+
+                ShowLeft();
+            }
         }
 
         private void SaveImage()
@@ -67,7 +74,7 @@ namespace Image_en_deripter
 
         private void InputMessage_KeyUp(object sender, KeyEventArgs e)
         {
-            ShwoLeft();
+            ShowLeft();
         }
 
         private void BtnDecode_Click(object sender, RoutedEventArgs e)
@@ -79,11 +86,11 @@ namespace Image_en_deripter
                 inputMessage.Document.Blocks.Clear();
                 inputMessage.Document.Blocks.Add(new Paragraph(new Run(bitImage.ReadMessage())));
 
-                ShwoLeft();
+                ShowLeft();
             }
         }
 
-        private void ShwoLeft()
+        private void ShowLeft()
         {
             byte[] array = Encoding.UTF8.GetBytes(new TextRange(inputMessage.Document.ContentStart, inputMessage.Document.ContentEnd).Text);
             BitArray bits = new BitArray(array);
